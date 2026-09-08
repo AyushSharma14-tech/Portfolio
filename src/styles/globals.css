@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Self-hosted-style font fallback (system stack only, no external requests) ---------- */
+/* Inter and JetBrains Mono fall back to high-quality system fonts when not bundled,
+   keeping the build truly static with zero runtime calls. */
+
+/* ---------- Theme tokens (RGB triplets so Tailwind alpha modifiers work) ---------- */
+@layer base {
+  :root {
+    /* Light theme */
+    --color-bg: 250 250 252;
+    --color-surface: 255 255 255;
+    --color-surface-2: 244 244 248;
+    --color-border: 226 226 234;
+    --color-muted: 120 120 135;
+    --color-text: 18 18 28;
+    --color-text-soft: 70 70 86;
+    --color-accent: 124 58 237;       /* violet-600 */
+    --color-accent-2: 37 99 235;      /* blue-600 */
+    --color-accent-3: 236 72 153;     /* pink-500 */
+    color-scheme: light;
+  }
+
+  html.dark {
+    --color-bg: 7 7 12;
+    --color-surface: 14 14 22;
+    --color-surface-2: 22 22 32;
+    --color-border: 38 38 52;
+    --color-muted: 140 140 160;
+    --color-text: 240 240 248;
+    --color-text-soft: 178 178 196;
+    --color-accent: 167 139 250;      /* violet-400 */
+    --color-accent-2: 96 165 250;     /* blue-400 */
+    --color-accent-3: 244 114 182;    /* pink-400 */
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-bg text-text font-sans antialiased min-h-screen;
+    background-image:
+      radial-gradient(at 0% 0%, rgb(var(--color-accent) / 0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgb(var(--color-accent-2) / 0.06) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgb(var(--color-accent) / 0.35);
+    color: rgb(var(--color-text));
+  }
+
+  /* Focus visible styling — accessible and themeable */
+  :focus-visible {
+    outline: 2px solid rgb(var(--color-accent));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-border));
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--color-accent) / 0.5);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+  }
+}
+
+/* ---------- Reusable component primitives ---------- */
+@layer components {
+  .container-page {
+    @apply container mx-auto;
+  }
+
+  .section {
+    @apply relative py-20 md:py-28 lg:py-32;
+  }
+
+  .section-eyebrow {
+    @apply inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-text-soft;
+  }
+
+  .heading-gradient {
+    background: linear-gradient(
+      120deg,
+      rgb(var(--color-text)) 0%,
+      rgb(var(--color-accent)) 50%,
+      rgb(var(--color-accent-2)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .surface-card {
+    @apply relative rounded-2xl border border-border bg-surface/70 backdrop-blur-md
+           transition-all duration-300 ease-out-expo;
+  }
+
+  .surface-card-hover {
+    @apply hover:border-accent/40 hover:shadow-glow hover:-translate-y-0.5;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border
+           bg-surface/60 px-3 py-1 text-xs font-medium text-text-soft
+           transition-colors duration-200 hover:border-accent/40 hover:text-text;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           px-5 py-2.5 text-sm font-medium
+           transition-all duration-300 ease-out-expo
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn text-white shadow-glow hover:shadow-glow-lg;
+    background: linear-gradient(135deg, rgb(var(--color-accent)) 0%, rgb(var(--color-accent-2)) 100%);
+  }
+
+  .btn-ghost {
+    @apply btn border border-border bg-surface/60 text-text hover:border-accent/50 hover:bg-surface;
+  }
+
+  .gradient-border {
+    position: relative;
+    background-clip: padding-box;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgb(var(--color-accent) / 0.6),
+      rgb(var(--color-accent-2) / 0.4),
+      rgb(var(--color-accent-3) / 0.5)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .shimmer-text {
+    background: linear-gradient(
+      90deg,
+      rgb(var(--color-text)) 0%,
+      rgb(var(--color-text)) 40%,
+      rgb(var(--color-accent)) 50%,
+      rgb(var(--color-text)) 60%,
+      rgb(var(--color-text)) 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shimmer 3s linear infinite;
+  }
+}
+
+/* ---------- Reduced motion: disable non-essential animations ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

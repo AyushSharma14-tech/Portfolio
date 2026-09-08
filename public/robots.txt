@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap is published at /PortFolio/sitemap.xml when hosted under repo Pages.
+# Update the host portion if a custom domain is wired up later.
